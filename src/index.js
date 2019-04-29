@@ -1,6 +1,8 @@
 import React from "react";
 import { render } from "react-dom";
 import axios from "axios";
+import Search from "./components/Search";
+import "./App.css";
 
 class App extends React.Component {
   constructor() {
@@ -8,28 +10,29 @@ class App extends React.Component {
     this.state = { gifUrlList: [] };
   }
 
-  componentDidMount() {
-    this.giphyApi();
-  }
-
   renderImageList(list) {
     const imageList = list.map(url => {
       return (
-        <li>
-          <img src={url} />
+        <li className="item">
+          <img className="image" src={url} />
         </li>
       );
     });
-    return <ul>{imageList}</ul>;
+    return <ul className="list">{imageList}</ul>;
   }
 
   render() {
-    return <div>{this.renderImageList(this.state.gifUrlList)}</div>;
+    return (
+      <div>
+        <Search search={this.giphyApi} />
+        {this.renderImageList(this.state.gifUrlList)}
+      </div>
+    );
   }
-  giphyApi() {
-    const search = "cat";
+  giphyApi = target => {
+    const search = target;
     const key = "xyfK2JliY3njRYtDVlL7mnqSWM4Kb8Ap";
-    const limit = 10;
+    const limit = 20;
 
     const url = `https://api.giphy.com/v1/gifs/search?q=${search}&api_key=${key}&limit=${limit}`;
 
@@ -38,7 +41,7 @@ class App extends React.Component {
       const imageUrlList = data.map(item => item.images.downsized.url);
       this.setState({ gifUrlList: imageUrlList });
     });
-  }
+  };
 }
 
 const rootElement = document.getElementById("root");
